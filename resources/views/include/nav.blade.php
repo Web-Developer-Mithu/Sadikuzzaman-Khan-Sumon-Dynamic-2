@@ -11,7 +11,7 @@
 
 <nav id="main-nav" aria-label="Main navigation">
   <div class="nav-inner">
-    <a href="#hero" class="nav-logo">Md. <span>Sadikuzzaman</span></a>
+    <a href="{{ url('/') }}" class="nav-logo">Md. <span>Sadikuzzaman</span></a>
     <ul class="nav-links" id="nav-links" role="menubar">
       <li role="none"><a href="{{ url('/#about') }}"      role="menuitem">About</a></li>
       <li role="none"><a href="{{ url('/#career') }}"     role="menuitem">Career</a></li>

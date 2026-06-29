@@ -120,6 +120,23 @@
       margin: 0;
       line-height: 1.2;
       color: #161616;
+      background: linear-gradient(90deg, #161616, #c9a35a, #161616);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      50% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
     }
     .blog-card-subtitle {
       font-size: 0.98rem;
@@ -247,9 +264,10 @@
     }
     .blog-slide-image {
       width: 100%;
-      height: 280px;
+      height: auto;
+      max-height: 400px;
       border-radius: 18px;
-      object-fit: cover;
+      object-fit: contain;
       margin-bottom: 22px;
       background: #f5f1eb;
     }
@@ -356,7 +374,12 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
     [data-theme="dark"] .blog-card-title {
-      color: #f0e8d8;
+      background: linear-gradient(90deg, #f0e8d8, #e4b96a, #f0e8d8);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s infinite;
     }
     [data-theme="dark"] .blog-card-subtitle {
       color: #c8d4e0;
@@ -431,7 +454,7 @@
 <body>
 
 <!-- NAVIGATION -->
-@include('include.nav');
+@include('include.nav')
 
 <div class="container">
   @php
@@ -449,12 +472,12 @@
       <p class="section-copy">Professional previews of the latest posts, publication sources, and quick access to recent highlights.</p>
     </div>
     <div class="blog-tabs">
-      <button class="blog-tab active" data-tab="recent">Recent</button>
-      <button class="blog-tab" data-tab="all">All Posts</button>
+      <button class="blog-tab" data-tab="recent">Recent</button>
+      <button class="blog-tab active" data-tab="all">All Posts</button>
     </div>
   </div>
 
-  <section id="recentSection" class="blog-section active">
+  <section id="recentSection" class="blog-section">
     <h2 class="section-title">Recent Highlights</h2>
     <div class="blog-grid">
       @foreach($recentBlogs as $blog)
@@ -502,7 +525,7 @@
     </div>
   </section>
 
-  <section id="allSection" class="blog-section">
+  <section id="allSection" class="blog-section active">
     <h2 class="section-title">All Posts</h2>
     <div class="blog-grid">
       @foreach($blogCollection as $blog)

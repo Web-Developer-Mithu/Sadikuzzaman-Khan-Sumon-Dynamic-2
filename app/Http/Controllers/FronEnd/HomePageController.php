@@ -16,6 +16,7 @@ class HomePageController extends Controller
         $user = User::first();
         $galleryItems = Gallery::orderBy('created_at', 'desc')->get();
         $journals = Journal::where('status','published')->orderBy('published_at','desc')->take(6)->get();
+        $blogs = Blog::all();
 
         return view('frontend.homepage', [
             'profileName' => optional($user)->name,
@@ -34,6 +35,7 @@ class HomePageController extends Controller
             'social_medias' => optional($user)->social_media,
             'galleryItems' => $galleryItems,
             'journals' => $journals,
+            'blogs' => $blogs,
         ]);
     }
 

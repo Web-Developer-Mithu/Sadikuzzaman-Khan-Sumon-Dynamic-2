@@ -336,13 +336,27 @@
                 <span style="background:#fff4dd; color:#8d6527; padding:6px 10px; border-radius:999px; font-weight:700; border:1px solid rgba(201,163,90,0.25); font-size:12px;">{{ $blog->publication_name }}</span>
               @endif
             </div>
-            <h3 style="margin:0; font-size:1.05rem; color:#111;">{{ \Illuminate\Support\Str::limit($blog->{'blog-title'}, 80) }}</h3>
+            <h3 class="home-blog-title" style="margin:0; font-size:1.05rem;">{{ \Illuminate\Support\Str::limit($blog->{'blog-title'}, 80) }}</h3>
             <p style="margin:0; color:#555; line-height:1.6;">{{ \Illuminate\Support\Str::limit($blog->subtitle ?? $blog->description ?? '', 120) }}</p>
-            <div style="margin-top:auto; display:flex; gap:8px; align-items:center;">
-              <a href="{{ $blog->article_url ?? url('/blog') }}" target="_blank" rel="noopener noreferrer" style="background:#c9a35a; color:#fff; padding:10px 14px; border-radius:999px; text-decoration:none; font-weight:700;">View Source</a>
-              <a href="{{ url('/blog') }}" class="btn btn-outline-secondary" style="padding:8px 12px; border-radius:999px;">More</a>
+            <div style="margin-top:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <button type="button" class="blog-read-btn" style="background:#c9a35a; color:#fff; padding:10px 14px; border-radius:999px; text-decoration:none; font-weight:700; border:none; cursor:pointer;"
+                data-title="{{ e($blog->{'blog-title'}) }}"
+                data-subtitle="{{ e($blog->subtitle ?? '') }}"
+                data-description-id="homeBlogDesc-{{ $blog->id }}"
+                data-image="{{ $blog->image_url ?? '' }}"
+                data-publication-name="{{ e($blog->publication_name ?? '') }}"
+                data-publication-date="{{ $blog->publication_date ?? '' }}"
+                data-article-url="{{ e($blog->article_url ?? '') }}"
+              >Read Preview</button>
+              @if($blog->article_url)
+                <a href="{{ $blog->article_url }}" target="_blank" rel="noopener noreferrer" style="background:#e8d5b7; color:#555; padding:8px 12px; border-radius:999px; text-decoration:none; font-weight:700;">View Source</a>
+              @endif
+              <a href="{{ url('/blog') }}" style="background:transparent; color:#c9a35a; padding:8px 12px; border-radius:999px; text-decoration:none; font-weight:700; border:1px solid #c9a35a;">More</a>
             </div>
           </div>
+        </div>
+        <div id="homeBlogDesc-{{ $blog->id }}" class="blog-description-data" style="display:none;">
+          {!! $blog->description !!}
         </div>
       @endforeach
     </div>
@@ -546,6 +560,263 @@
 
 </div>
 
+<!-- Blog Slide Preview Panel -->
+<div id="blogSlideOverlay" class="blog-slide-overlay" tabindex="-1"></div>
+<aside id="blogSlidePanel" class="blog-slide-panel" aria-hidden="true" aria-labelledby="blog-slide-title">
+  <div class="blog-slide-header">
+    <div>
+      <h2 id="blog-slide-title">Blog Preview</h2>
+      <p style="margin: 6px 0 0; color: #6f6f6f; font-size: 0.95rem;">Story summary and publication details in one place.</p>
+    </div>
+    <button type="button" id="blogSlideClose" class="blog-slide-close" aria-label="Close blog preview">×</button>
+  </div>
+  <div class="blog-slide-content">
+    <img id="blogSlideImage" class="blog-slide-image" src="" alt="Blog image">
+    <div class="blog-slide-meta">
+      <div class="blog-slide-meta-item">
+        <h3>Publication</h3>
+        <p id="blogSlidePublicationText">—</p>
+      </div>
+      <div class="blog-slide-meta-item">
+        <h3>Source</h3>
+        <p id="blogSlideSourceText">—</p>
+      </div>
+      <div class="blog-slide-meta-item">
+        <h3>Published</h3>
+        <p id="blogSlideDate">—</p>
+      </div>
+    </div>
+    <div class="blog-slide-detail">
+      <strong>Title</strong>
+      <p id="blogSlideTitleText"></p>
+    </div>
+    <div class="blog-slide-detail">
+      <strong>Subtitle</strong>
+      <p id="blogSlideSubtitleText"></p>
+    </div>
+    <div class="blog-slide-detail">
+      <strong>Description</strong>
+      <p id="blogSlideDescriptionText"></p>
+    </div>
+    <div class="blog-slide-footer">
+      <a id="blogSlideSourceLink" href="#" target="_blank" rel="noopener noreferrer">Open source article</a>
+    </div>
+  </div>
+</aside>
 
+<style>
+  .blog-slide-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(18, 18, 22, 0.66);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .24s ease, visibility .24s ease;
+    z-index: 1000;
+  }
+  .blog-slide-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+  .blog-slide-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: min(600px, 100%);
+    background: #ffffff;
+    box-shadow: -16px 0 64px rgba(20, 20, 40, 0.18);
+    transform: translateX(110%);
+    transition: transform .28s ease;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+  }
+  .blog-slide-panel.open {
+    transform: translateX(0);
+  }
+  .blog-slide-header {
+    padding: 28px 28px 18px;
+    border-bottom: 1px solid #f0e9db;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .blog-slide-header h2 {
+    font-size: 1.3rem;
+    margin: 0;
+    color: #222;
+  }
+  .blog-slide-close {
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: #f4efe7;
+    color: #5b432c;
+    cursor: pointer;
+    font-size: 22px;
+    display: grid;
+    place-items: center;
+  }
+  .blog-slide-content {
+    overflow-y: auto;
+    padding: 24px 28px 28px;
+    flex: 1;
+  }
+  .blog-slide-image {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    border-radius: 18px;
+    object-fit: contain;
+    margin-bottom: 22px;
+    background: #f5f1eb;
+  }
+  .blog-slide-detail {
+    margin-bottom: 24px;
+  }
+  .blog-slide-detail strong {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #9e8551;
+    margin-bottom: 10px;
+  }
+  .blog-slide-detail p {
+    margin: 0;
+    color: #4b4b4b;
+    line-height: 1.9;
+    font-size: 0.98rem;
+  }
+  .blog-slide-meta {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    margin-bottom: 24px;
+  }
+  .blog-slide-meta-item {
+    border-radius: 16px;
+    border: 1px solid rgba(201, 163, 90, 0.25);
+    background: #fffbf5;
+    padding: 18px 18px 16px;
+  }
+  .blog-slide-meta-item h3 {
+    font-size: 0.78rem;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: #9b7c43;
+  }
+  .blog-slide-meta-item p,
+  .blog-slide-meta-item a {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #3c3c3c;
+  }
+  .blog-slide-meta-item a {
+    color: #b78b32;
+    text-decoration: none;
+  }
+  .blog-slide-meta-item a:hover {
+    text-decoration: underline;
+  }
+  .blog-slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    color: #6b6b6b;
+    font-size: 0.95rem;
+  }
+  .blog-slide-footer span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .blog-slide-footer a {
+    color: #b58e3f;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .blog-slide-footer a:hover {
+    color: #8e6b2d;
+  }
+  [data-theme="dark"] .blog-slide-overlay {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  [data-theme="dark"] .blog-slide-panel {
+    background: #111d2e;
+    box-shadow: -16px 0 64px rgba(0, 0, 0, 0.5);
+  }
+  [data-theme="dark"] .blog-slide-header {
+    border-bottom: 1px solid rgba(201, 163, 90, 0.1);
+  }
+  [data-theme="dark"] .blog-slide-header h2 {
+    color: #f0e8d8;
+  }
+  [data-theme="dark"] .blog-slide-header p {
+    color: #8fa3bc;
+  }
+  [data-theme="dark"] .blog-slide-close {
+    background: #14253d;
+    color: #e4b96a;
+  }
+  [data-theme="dark"] .blog-slide-detail strong {
+    color: #e4b96a;
+  }
+  [data-theme="dark"] .blog-slide-detail p {
+    color: #c8d4e0;
+  }
+  [data-theme="dark"] .blog-slide-meta-item {
+    background: #14253d;
+    border-color: rgba(228, 185, 106, 0.15);
+  }
+  [data-theme="dark"] .blog-slide-meta-item h3 {
+    color: #e4b96a;
+  }
+  [data-theme="dark"] .blog-slide-meta-item p,
+  [data-theme="dark"] .blog-slide-meta-item a {
+    color: #c8d4e0;
+  }
+  [data-theme="dark"] .blog-slide-footer {
+    color: #8fa3bc;
+  }
+  [data-theme="dark"] .blog-slide-footer a {
+    color: #e4b96a;
+  }
+  .home-blog-title {
+    background: linear-gradient(90deg, #111, #c9a35a, #111);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s infinite;
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    50% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  [data-theme="dark"] .home-blog-title {
+    background: linear-gradient(90deg, #f0e8d8, #e4b96a, #f0e8d8);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s infinite;
+  }
+</style>
 
 @endsection

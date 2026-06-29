@@ -10,14 +10,14 @@
 <body>
 
 <!-- NAVIGATION -->
-@include('include.nav');
+@include('include.nav')
 
 {{-- Content --}}
 @yield('content')
 
 
 {{-- Footer --}}
-@include('include.footer');
+@include('include.footer')
 
 <script src="{{ asset('script.js') }}" class="js"></script>
 </body>
