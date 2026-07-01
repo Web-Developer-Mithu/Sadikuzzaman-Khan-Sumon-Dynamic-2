@@ -6,6 +6,7 @@ use App\Http\Controllers\FronEnd\HomePageController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BlogsController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\JournalController as AdminJournalController;
 use App\Http\Controllers\FronEnd\JournalController as FrontJournalController;
 
@@ -55,6 +56,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/gallery/edit/{id}', [GalleryController::class, 'edit']);
     Route::post('/admin/gallery/update/{id}', [GalleryController::class, 'update']);
     Route::get('/admin/gallery/delete/{id}', [GalleryController::class, 'destroy']);
+    Route::get('/admin/achievement', [AchievementController::class, 'index']);
+    Route::get('/admin/achievement/create', [AchievementController::class, 'create']);
+    Route::post('/admin/achievement/store', [AchievementController::class, 'store']);
+    Route::get('/admin/achievement/edit/{id}', [AchievementController::class, 'edit']);
+    Route::post('/admin/achievement/update/{id}', [AchievementController::class, 'update']);
+    Route::get('/admin/achievement/delete/{id}', [AchievementController::class, 'destroy']);
     Route::get('/admin/profile', [AdminController::class, 'editProfile']);
     Route::post('/admin/profile', [AdminController::class, 'updateProfile']);
 

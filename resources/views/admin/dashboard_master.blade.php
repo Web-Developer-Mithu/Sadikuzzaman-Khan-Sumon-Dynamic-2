@@ -687,7 +687,7 @@
                             </a>
                         </li>
 
-                        @php $manageOpen = request()->is('admin/gallery*') || request()->is('admin/profile'); @endphp
+                        @php $manageOpen = request()->is('admin/gallery*') || request()->is('admin/achievement*') || request()->is('admin/profile'); @endphp
                         <li class="nav-item {{ $manageOpen ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ $manageOpen ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-folder2-open"></i>
@@ -701,6 +701,12 @@
                                     <a href="{{ url('/admin/gallery') }}" class="nav-link {{ request()->is('admin/gallery*') ? 'active' : '' }}">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Gallery</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('/admin/achievement') }}" class="nav-link {{ request()->is('admin/achievement*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Achievement</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">

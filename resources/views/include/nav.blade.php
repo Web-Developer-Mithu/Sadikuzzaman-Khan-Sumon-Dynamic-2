@@ -18,6 +18,7 @@
       <li role="none"><a href="{{ url('/#leadership') }}" role="menuitem">Leadership</a></li>
       <li role="none"><a href="{{ url('/#education') }}"  role="menuitem">Education</a></li>
       <li role="none"><a href="{{ url('/#gallery') }}"    role="menuitem">Gallery</a></li>
+      <li role="none"><a href="{{ url('/#achievement') }}" role="menuitem">Achievement</a></li>
       <li role="none"><a href="{{ url('/#journal') }}"    role="menuitem">Journal</a></li>
       <li role="none"><a href="{{ url('/blog') }}"    role="menuitem">Blog</a></li>
       <li role="none"><a href="{{ url('/#contact') }}"    role="menuitem">Contact</a></li>

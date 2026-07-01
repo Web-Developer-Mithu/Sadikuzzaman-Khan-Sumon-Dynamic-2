@@ -314,7 +314,7 @@
     <div class="blog-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; margin-top:16px;">
       @php
         $homeBlogs = $blogs instanceof \Illuminate\Contracts\Pagination\Paginator ? collect($blogs->items()) : collect($blogs);
-        $homeRecent = $homeBlogs->take(4);
+        $homeRecent = $homeBlogs;
       @endphp
       @foreach($homeRecent as $blog)
         <div class="blog-card" style="border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.06); background:#fff;">
@@ -451,6 +451,25 @@
     </div>
     <div class="gallery reveal">
       @foreach($galleryItems as $item)
+      <div class="gallery-item" style="transition-delay: {{ $loop->index * 0.1 }}s">
+        <img src="{{ $item->image_url }}" alt="{{ $item->title }}" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-overlay-text">{{ $item->title }}</span></div>
+        <p class="gallery-caption">{{ $item->title }}</p>
+      </div>
+      @endforeach
+    </div>
+  </section>
+  @endif
+
+  <!-- ACHIEVEMENTS -->
+  @if(isset($achievements) && $achievements->isNotEmpty())
+  <section class="section" id="achievement" aria-labelledby="achievement-title">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">Accomplishments</span>
+      <h2 class="section-title" id="achievement-title">Achievements</h2>
+    </div>
+    <div class="gallery reveal">
+      @foreach($achievements as $item)
       <div class="gallery-item" style="transition-delay: {{ $loop->index * 0.1 }}s">
         <img src="{{ $item->image_url }}" alt="{{ $item->title }}" loading="lazy">
         <div class="gallery-overlay"><span class="gallery-overlay-text">{{ $item->title }}</span></div>
