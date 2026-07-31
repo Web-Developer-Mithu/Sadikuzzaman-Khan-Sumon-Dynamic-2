@@ -47,4 +47,14 @@ class HomePageController extends Controller
         $blogs = Blog::all();
         return view('frontend.blog', ['blogs' => $blogs]);
     }
+
+    public function artistProfile()
+    {
+        $user = User::first();
+
+        return view('frontend.artist-profile', [
+            'profileName' => optional($user)->name ?: 'Md Sadikuzzaman',
+            'profileImage' => optional($user)->profile_image,
+        ]);
+    }
 }

@@ -22,6 +22,7 @@ use App\Http\Controllers\FronEnd\JournalController as FrontJournalController;
 */
 // Frnotend Routes
 Route::get('/', [HomePageController::class, 'index']);
+Route::get('/artist-profile', [HomePageController::class, 'artistProfile']);
 Route::get('/blog', [HomePageController::class, 'blog']);
 Route::get('/journals', [FrontJournalController::class, 'index']);
 Route::get('/journals/{slug}', [FrontJournalController::class, 'show']);

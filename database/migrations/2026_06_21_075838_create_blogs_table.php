@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('publication_name')->nullable();
             $table->string('article_url')->nullable();
             $table->longText('description');
-            $table->string('img')->nullable();
+                      $table->string('img')->nullable();
 
         });
     }

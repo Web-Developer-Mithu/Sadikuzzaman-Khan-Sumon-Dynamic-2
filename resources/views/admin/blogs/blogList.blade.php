@@ -280,8 +280,8 @@ html[data-bs-theme="dark"] .btn-del:hover { background: #5f2120; }
           <div class="actions">
             <a href="{{ url('/admin/edit-blog/' . $blog->id) }}" class="btn-edit">
               <i class="bi bi-pencil-square"></i> Edit
-            </a>
-            <a href="{{ url('/admin/delete-blog/' . $blog->id) }}" onclick="return confirm('Are you sure you want to delete this blog?')" class="btn-del">
+                     </a>
+            <a href="{{ url('/admin/delete-blog/' . $blog->id) }}" onclick="return confirm('Are you sure you want to delete this blog?')"       class="btn-del">
               <i class="bi bi-trash3"></i> Delete
             </a>
           </div>
